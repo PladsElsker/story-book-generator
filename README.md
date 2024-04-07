@@ -11,12 +11,14 @@ Generate a story book narated and depicted by AI from written novels
 
 ### Light novel to audio
 
-No idea yet.
+- https://huggingface.co/spaces/coqui/xtts
+- Maybe something else?
 
 ### Light novel to sequence of image
 
 - Stable diffusion transformer model?
 - LLM to fetch previous images from database for consistency?
+- Basic natural language analysis and embbeding database?
 - Split characters and background?
 
 ### Web server
