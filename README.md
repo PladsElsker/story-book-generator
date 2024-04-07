@@ -22,15 +22,10 @@ Input: A markdown chapter.
 Output: A sequence markdown paragraph txt files.
 
 ### Light novel to audio
-
-- https://huggingface.co/spaces/coqui/xtts
-- https://huggingface.co/suno/bark
-- https://huggingface.co/suno/bark-small
 - https://huggingface.co/metavoiceio/metavoice-1B-v0.1
-- https://huggingface.co/microsoft/speecht5_tts
+- https://huggingface.co/Pendrokar/xvapitch_nvidia
+- https://huggingface.co/spaces/coqui/xtts
 - https://huggingface.co/ShoukanLabs/Vokan
-- https://huggingface.co/facebook/mms-tts-eng
-- https://huggingface.co/myshell-ai/MeloTTS-English
 - Maybe something else?
 
 Input: One markdown paragraph file.
