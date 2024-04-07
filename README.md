@@ -28,6 +28,8 @@ Generate a story book narated and depicted by AI from written novels
 - Basic natural language analysis and embbeding database?
 - Split characters and background?
 
-### Web server
+### Mobile consumption
 
 - Consume the audio and video easily from a cellphone while traveling.
+- Web server + mobile browser for real time generation?
+- offline generation and save generated story on a mobile app? This is probably more realistic.
