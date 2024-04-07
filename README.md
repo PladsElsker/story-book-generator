@@ -9,6 +9,10 @@ Generate a story book narated and depicted by AI from written novels
 - Python + headless browser
 - Should easily be able to scrape different web sites, and click on the "next chapter" link automatically
 
+Input: A web url of a light novel.
+
+Output: A folder of one markdown file per chapter. The folder also contains a metadata file with the title & url of the main page and last scrapped page, to support incremental generation.
+
 ### Light novel to audio
 
 - https://huggingface.co/spaces/coqui/xtts
@@ -20,6 +24,9 @@ Generate a story book narated and depicted by AI from written novels
 - https://huggingface.co/facebook/mms-tts-eng
 - https://huggingface.co/myshell-ai/MeloTTS-English
 - Maybe something else?
+
+Input: One markdown file.
+Output: One mp3 file.
 
 ### Light novel to sequence of image
 
