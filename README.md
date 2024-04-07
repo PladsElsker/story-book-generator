@@ -13,6 +13,14 @@ Input: A web url of a light novel.
 
 Output: A folder of one markdown file per chapter. The folder also contains a metadata file with the title & url of the main page and last scrapped page, to support incremental generation.
 
+### Paragraph splitter
+
+To make sure both the audio and the image are in sync, the chapters must be split into visually similar paragraphs and then those splits must be reused for both the audio and visual pipelines.
+
+Input: A markdown chapter.
+
+Output: A sequence markdown paragraph txt files.
+
 ### Light novel to audio
 
 - https://huggingface.co/spaces/coqui/xtts
@@ -25,7 +33,8 @@ Output: A folder of one markdown file per chapter. The folder also contains a me
 - https://huggingface.co/myshell-ai/MeloTTS-English
 - Maybe something else?
 
-Input: One markdown file.
+Input: One markdown paragraph file.
+
 Output: One mp3 file.
 
 ### Light novel to sequence of image
@@ -35,8 +44,14 @@ Output: One mp3 file.
 - Basic natural language analysis and embbeding database?
 - Split characters and background?
 
+Input: A markdown file for a paragraph. A repository of previously generated images and associated annotations. An annotation is a text associated to a generated image, could be the original light novel text or a reasoning about the image. Annotations are optimized to be searched when generating the next image.
+
+Output: One image representing the paragraph, along with the annotation of the image.
+
 ### Mobile consumption
 
 - Consume the audio and video easily from a cellphone while traveling.
 - Web server + mobile browser for real time generation?
 - offline generation and save generated story on a mobile app? This is probably more realistic.
+
+Input:
