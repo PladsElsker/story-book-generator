@@ -9,15 +9,15 @@ Generate a story book narated and depicted by AI from written novels
 - Python + headless browser
 - Should easily be able to scrape different web sites, and click on the "next chapter" link automatically
 
-`Input`: A web url of a light novel.  
-`Output`: A folder of one markdown file per chapter. The folder also contains a metadata file with the title & url of the main page and last scrapped page, to support incremental generation.
+`Input` A web url of a light novel.  
+`Output` A folder of one markdown file per chapter. The folder also contains a metadata file with the title & url of the main page and last scrapped page, to support incremental generation.
 
 ### Paragraph splitter
 
 To make sure both the audio and the image are in sync, the chapters must be split into visually similar paragraphs and then those splits must be reused for both the audio and visual pipelines.
 
-`Input`: A markdown chapter.  
-`Output`: A sequence markdown paragraph txt files.
+`Input` A markdown chapter.  
+`Output` A sequence markdown paragraph txt files.
 
 ### Light novel to audio
 - https://huggingface.co/metavoiceio/metavoice-1B-v0.1
@@ -27,8 +27,8 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - [rvc](https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI)?
 - Maybe something else?
 
-`Input`: One markdown paragraph file.  
-`Output`: One mp3 file.
+`Input` One markdown paragraph file.  
+`Output` One mp3 file.
 
 ### Light novel to sequence of image
 
@@ -37,8 +37,8 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - Basic natural language analysis and embbeding database?
 - Split characters and background?
 
-`Input`: A markdown file for a paragraph. A repository of previously generated images and associated annotations. An annotation is a text associated to a generated image, could be the original light novel text or a reasoning about the image. Annotations are optimized to be searched when generating the next image.  
-`Output`: One image representing the paragraph, along with the annotation of the image.
+`Input` A markdown file for a paragraph. A repository of previously generated images and associated annotations. An annotation is a text associated to a generated image, could be the original light novel text or a reasoning about the image. Annotations are optimized to be searched when generating the next image.  
+`Output` One image representing the paragraph, along with the annotation of the image.
 
 ### Mobile consumption
 
