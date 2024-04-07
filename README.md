@@ -26,6 +26,7 @@ Output: A sequence markdown paragraph txt files.
 - https://huggingface.co/Pendrokar/xvapitch_nvidia
 - https://huggingface.co/spaces/coqui/xtts
 - https://huggingface.co/ShoukanLabs/Vokan
+- [rvc](https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI)?
 - Maybe something else?
 
 Input: One markdown paragraph file.
