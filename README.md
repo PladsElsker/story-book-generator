@@ -12,6 +12,8 @@ Generate a story book narated and depicted by AI from written novels
 ### Light novel to audio
 
 - https://huggingface.co/spaces/coqui/xtts
+- https://huggingface.co/suno/bark
+- https://huggingface.co/metavoiceio/metavoice-1B-v0.1
 - Maybe something else?
 
 ### Light novel to sequence of image
