@@ -10,7 +10,6 @@ from loguru import logger
 
 CHROMEDRIVER_DIRECTORY = pathlib.Path(__file__).parent / "chromedriver-linux64"
 CHROMEDRIVER_PATH = CHROMEDRIVER_DIRECTORY / "chromedriver"
-LATEST_RELEASE_ROUTE = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
 CHROME_DRIVER_DOWNLOAD_URL = "https://storage.googleapis.com/chrome-for-testing-public/{version}/linux64/chromedriver-linux64.zip"
 
 
