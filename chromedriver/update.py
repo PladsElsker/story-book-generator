@@ -32,7 +32,7 @@ def check_for_updates():
             logger.debug("Chrome driver is up to date")
             return
         else:
-            logger.debug(f"Google driver version does not match google chrome")
+            logger.debug(f"Chrome driver version does not match google chrome")
     
     logger.debug(f"Installing chrome driver {chrome_version}")
     remove_webdriver()
