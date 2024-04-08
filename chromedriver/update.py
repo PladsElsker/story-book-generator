@@ -1,4 +1,5 @@
 import os
+import shutil
 import io
 import pathlib
 import zipfile
@@ -13,28 +14,28 @@ CHROME_DRIVER_DOWNLOAD_URL = "https://storage.googleapis.com/chrome-for-testing-
 
 
 def check_for_updates():
-    try:
-        chrome_version_process = subprocess.Popen("google-chrome --version", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        output, error = chrome_version_process.communicate()
-        chrome_version = output.decode("utf-8").split(" ")[2]
-    except Exception as e:
+    output, error = run_command("google-chrome --version")
+    if error:
         logger.error("Google chrome is not installed")
-        raise e
+        raise RuntimeError(error.decode("utf-8"))
+    
+    chrome_version = output.decode("utf-8").split(" ")[2]
+    logger.debug(f"Found google chrome version {chrome_version}")
 
-    try:
-        chromedriver_version_process = subprocess.Popen(f"{CHROMEDRIVER_DIRECTORY}/chromedriver -v", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        output, error = chromedriver_version_process.communicate()
+    output, error = run_command(f"{CHROMEDRIVER_DIRECTORY}/chromedriver -v")
+    chromedriver_version = None
+    if error:
+        logger.debug(f"Chrome driver is not installed")
+    else:
         chromedriver_version = output.decode("utf-8").split(" ")[1]
         if chromedriver_version == chrome_version:
             logger.debug("Chrome driver is up to date")
             return
-    except:
-        pass
-
+        else:
+            logger.debug(f"Google driver version does not match google chrome")
+    
     logger.debug(f"Installing chrome driver {chrome_version}")
-
     remove_webdriver()
-
     download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
     response = requests.get(download_url, stream=True)
     if response.status_code == 200:
@@ -45,10 +46,14 @@ def check_for_updates():
     logger.debug(f"Chrome driver installed succesfully")
 
 
+def run_command(command: str) -> tuple[str]:
+    return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+
+
 def remove_webdriver():
     try:
-        os.remove(CHROMEDRIVER_DIRECTORY)
-    except FileNotFoundError:
+        shutil.rmtree(CHROMEDRIVER_DIRECTORY)
+    except:
         pass
 
 
@@ -59,4 +64,4 @@ def unpack_webdriver(webdriver_content):
         pass
     
     with zipfile.ZipFile(io.BytesIO(webdriver_content)) as zip_file:
-        zip_file.extractall(CHROMEDRIVER_DIRECTORY)
+        zip_file.extractall(CHROMEDRIVER_DIRECTORY.parent)
