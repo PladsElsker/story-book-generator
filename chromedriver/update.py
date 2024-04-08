@@ -22,7 +22,7 @@ def check_for_updates():
     chrome_version = output.decode("utf-8").split(" ")[2]
     logger.debug(f"Found google chrome version {chrome_version}")
 
-    output, error = run_command(f"{CHROMEDRIVER_DIRECTORY}/chromedriver -v")
+    output, error = run_command(f"{CHROMEDRIVER_PATH} -v")
     chromedriver_version = None
     if error:
         logger.debug(f"Chrome driver is not installed")
