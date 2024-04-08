@@ -28,7 +28,7 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - Maybe something else?
 
 `Input` One markdown paragraph file.  
-`Output` One mp3 file.
+`Output` One wav file.
 
 ### Light novel to sequence of image
 
