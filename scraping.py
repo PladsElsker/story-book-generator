@@ -89,16 +89,3 @@ class ScraperFactory:
 scraper = ScraperFactory().create("https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705")
 scraper.scrape_chapters()
 scraper.close()
-
-"""
-- Comprends pas pourquoi le scraping serait fait dans l'extension chrome. 
-    -> Le user va voir les pages bouger à des vitesses fulgurantes / tab ouverte à côté qui n'est pas utilisée. 
-
-- Pourquoi markdown? On peut tu sauvegarder les chapitres en json à la place? 
-- Obliger les modèles d'image et de son à avoir le même paragraphe avec lequel travailler semble être arbitraire / inutile. 
-    -> On pourrait très bien synchroniser l'image avec ses propres paragraphes, et générer la voix "phrase par phrase", par exemple. 
-
-- Une idée que j'ai eu pour l'audio avec Louis pour guider un tts avec RVC: 
-    x = tts(text, rvc(voice_sample))
-    x = weighted_sum(x, rvc(x))
-"""
