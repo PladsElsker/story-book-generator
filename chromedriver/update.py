@@ -38,11 +38,8 @@ def check_for_updates() -> None:
     remove_webdriver()
     download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
     response = requests.get(download_url, stream=True)
-    if response.status_code == 200:
-        unpack_webdriver(response.content)
-    else:
-        logger.error(f"Failed to download chrome driver from {download_url}")
-    
+    response.raise_for_status()
+    unpack_webdriver(response.content)
     logger.debug(f"Chrome driver installed succesfully")
 
 
