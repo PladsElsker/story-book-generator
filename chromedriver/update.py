@@ -18,10 +18,12 @@ CHROMEDRIVER_DIRECTORY = CHROME_PKG_DIRECTORY / "chromedriver-linux64"
 CHROMEDRIVER_PATH = CHROMEDRIVER_DIRECTORY / "chromedriver"
 
 
-def check_for_updates(allow_google_chrome_updates: bool = False) -> None:
-    google_chrome_version = get_chrome_version(GOOGLE_CHROME_PATH)
+def check_for_updates(allow_google_chrome_updates: bool = True) -> None:
+    google_chrome_version = get_version(GOOGLE_CHROME_PATH)
     latest_version = get_latest_google_chrome_version()
-    
+    if google_chrome_version is not None:
+        logger.info(f"Found google chrome version {google_chrome_version}")
+
     if google_chrome_version is None:
         logger.warning("Google chrome not installed")
         install_google_chrome(latest_version)
@@ -29,11 +31,9 @@ def check_for_updates(allow_google_chrome_updates: bool = False) -> None:
         logger.warning(f"Updating google chrome")
         remove_google_chrome()
         install_google_chrome(latest_version)
-    else:
-        logger.info(f"Found google chrome version {google_chrome_version}")
 
-    google_chrome_version = get_chrome_version(GOOGLE_CHROME_PATH)
-    chromedriver_version = get_chrome_version(CHROMEDRIVER_PATH)
+    google_chrome_version = get_version(GOOGLE_CHROME_PATH)
+    chromedriver_version = get_version(CHROMEDRIVER_PATH)
 
     if chromedriver_version == google_chrome_version:
         logger.info("Chrome driver is up to date")
@@ -48,7 +48,7 @@ def check_for_updates(allow_google_chrome_updates: bool = False) -> None:
     install_chromedriver(google_chrome_version)
 
 
-def get_chrome_version(executable: str) -> str:
+def get_version(executable: str) -> str:
     output, error = run_command(f"{executable} --version")
     if error:
         return None
