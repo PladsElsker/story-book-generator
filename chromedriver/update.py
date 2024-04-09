@@ -1,6 +1,7 @@
 import os
 import shutil
 import io
+import json
 import zipfile
 import requests
 import subprocess
@@ -10,7 +11,7 @@ from loguru import logger
 
 CHROMEDRIVER_DIRECTORY = Path(__file__).parent / "chromedriver-linux64"
 CHROMEDRIVER_PATH = CHROMEDRIVER_DIRECTORY / "chromedriver"
-CHROME_DRIVER_DOWNLOAD_URL = "https://storage.googleapis.com/chrome-for-testing-public/{version}/linux64/chromedriver-linux64.zip"
+GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_URL = "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"
 
 
 def check_for_updates() -> None:
@@ -31,7 +32,8 @@ def check_for_updates() -> None:
     logger.warning(f"Installing chrome driver {chrome_version}")
 
     remove_chromedriver()
-    download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
+
+    download_url = get_chromedriver_download_url(chrome_version)
     response = requests.get(download_url, stream=True)
     response.raise_for_status()
     unpack_chromedriver(response.content)
@@ -54,6 +56,22 @@ def get_chromedriver_version() -> str:
         return None
     
     return output.decode("utf-8").split(" ")[1]
+
+
+def get_chromedriver_download_url(chrome_version: str) -> str:
+    response = requests.get(GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_URL)
+    response.raise_for_status()
+    good_versions = json.loads(response.text)["versions"]
+
+    version_object = next(iter(v for v in good_versions if v["version"] == chrome_version))
+    downloads = version_object["downloads"]
+    if "chromedriver" not in downloads:
+        msg = f"Unable to find a matching chromedriver version for google chrome {chrome_version}"
+        raise RuntimeError(msg)
+
+    chromedriver_downloads = downloads["chromedriver"]
+    linux_download = next(iter(d for d in chromedriver_downloads if d["platform"] == "linux64"))
+    return linux_download["url"]
 
 
 def run_command(command: str) -> tuple[str]:
