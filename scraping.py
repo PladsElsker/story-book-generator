@@ -9,34 +9,25 @@ from chromedriver import CHROMEDRIVER_PATH
 import text_cleaning
 
 
-SCRAPED_NOVEL_DIRECTORY = Path("scraped_novels")
+SCRAPED_NOVELS_DIRECTORY = Path("scraped_novels")
 
 
 class NovelScraper:
-    def __init__(self, url: str) -> None:
+    def __init__(self, driver: webdriver.Chrome, url: str) -> None:
         self.url = url
-        service = Service(executable_path=CHROMEDRIVER_PATH)
-        options = Options()
-        # options.add_argument("--headless")
-        options.add_argument("--window-size=1920,1080")
-        options.add_argument("--no-sandbox")
-        self.driver = webdriver.Chrome(service=service, options=options)
-
+        self.driver = driver
         self.driver.get(url)
-        self.driver.execute_script("document.querySelector('#j_read').click();")
 
-    def scrape_chapters(self) -> list[str]:
+    def scrape(self) -> list[str]:
         raise NotImplementedError()
-
-    def close(self):
-        self.driver.quit()
 
 
 class WebnovelScraper(NovelScraper):
-    def __init__(self, url: str) -> None:
-        super().__init__(url)
+    def __init__(self, driver: webdriver.Chrome, url: str) -> None:
+        super().__init__(driver, url)
+        self.driver.execute_script("document.querySelector('#j_read').click();")
 
-    def scrape_chapters(self) -> list[str]:
+    def scrape(self) -> list[str]:
         end_reached = False
 
         while not end_reached:
@@ -53,7 +44,7 @@ class WebnovelScraper(NovelScraper):
                         clearTimeout(timeout_handle);
                         callback('');
                     }
-                }, 50);
+                }, 1000);
                 timeout_handle = setTimeout(() => callback('done'), 4000);
             """)
         
@@ -66,10 +57,11 @@ class WebnovelScraper(NovelScraper):
                 return {title, paragraph};
             }));
         """))
-        chapters["main_page_url"] = self.url;
-        chapters["last_scraped_url"] = self.driver.execute_script("return window.location.href;");
-        chapters = [text_cleaning.clean_chapter(chapter) for chapter in chapters]
-        return chapters
+        scraped = {}
+        scraped["chapters"] = [text_cleaning.clean_chapter(chapter) for chapter in chapters]
+        scraped["main_page_url"] = self.url;
+        scraped["last_scraped_url"] = self.driver.execute_script("return window.location.href;");
+        return scraped
 
 
 SCRAPER_MAP = {
@@ -78,14 +70,23 @@ SCRAPER_MAP = {
 
 
 class ScraperFactory:
-    def create(self, webdriver: webdriver.Chrome, novel_page_url: str, *, website: str = None) -> str:
+    def create(self, driver: webdriver.Chrome, novel_page_url: str, *, website: str = None) -> str:
         if not website:
-            parsed_url = urlparse(webdriver, novel_page_url).netloc
+            parsed_url = urlparse(novel_page_url).netloc
             website = parsed_url
 
-        return SCRAPER_MAP[website](novel_page_url)
+        return SCRAPER_MAP[website](driver, novel_page_url)
 
 
-scraper = ScraperFactory().create("https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705")
-scraper.scrape_chapters()
-scraper.close()
+if __name__ == "__main__":
+    service = Service(executable_path=CHROMEDRIVER_PATH)
+    options = Options()
+    # options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(service=service, options=options)
+
+    # scraper = ScraperFactory().create(driver, "https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705")
+    scraper = ScraperFactory().create(driver, "https://www.webnovel.com/book/strongest-mage-with-the-lust-system_22715595806121505")
+    scraped = scraper.scrape()
+    driver.quit()
