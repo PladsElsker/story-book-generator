@@ -1,19 +1,19 @@
 import os
 import shutil
 import io
-import pathlib
 import zipfile
 import requests
 import subprocess
+from pathlib import Path
 from loguru import logger
 
 
-CHROMEDRIVER_DIRECTORY = pathlib.Path(__file__).parent / "chromedriver-linux64"
+CHROMEDRIVER_DIRECTORY = Path(__file__).parent / "chromedriver-linux64"
 CHROMEDRIVER_PATH = CHROMEDRIVER_DIRECTORY / "chromedriver"
 CHROME_DRIVER_DOWNLOAD_URL = "https://storage.googleapis.com/chrome-for-testing-public/{version}/linux64/chromedriver-linux64.zip"
 
 
-def check_for_updates():
+def check_for_updates() -> None:
     output, error = run_command("google-chrome --version")
     if error:
         logger.error("Google chrome is not installed")
@@ -50,14 +50,14 @@ def run_command(command: str) -> tuple[str]:
     return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
 
 
-def remove_webdriver():
+def remove_webdriver() -> None:
     try:
         shutil.rmtree(CHROMEDRIVER_DIRECTORY)
     except:
         pass
 
 
-def unpack_webdriver(webdriver_content):
+def unpack_webdriver(webdriver_content: bytes) -> None:
     try:
         os.mkdir(CHROMEDRIVER_DIRECTORY)
     except FileExistsError:
