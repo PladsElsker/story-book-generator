@@ -20,27 +20,27 @@ def check_for_updates() -> None:
         raise RuntimeError(error.decode("utf-8"))
     
     chrome_version = output.decode("utf-8").split(" ")[2]
-    logger.debug(f"Found google chrome version {chrome_version}")
+    logger.info(f"Found google chrome version {chrome_version}")
 
     output, error = run_command(f"{CHROMEDRIVER_PATH} -v")
     chromedriver_version = None
     if error:
-        logger.debug(f"Chrome driver is not installed")
+        logger.warning(f"Chrome driver is not installed")
     else:
         chromedriver_version = output.decode("utf-8").split(" ")[1]
         if chromedriver_version == chrome_version:
-            logger.debug("Chrome driver is up to date")
+            logger.info("Chrome driver is up to date")
             return
         else:
-            logger.debug(f"Chrome driver version does not match google chrome")
+            logger.warning(f"Chrome driver version does not match google chrome")
     
-    logger.debug(f"Installing chrome driver {chrome_version}")
+    logger.warning(f"Installing chrome driver {chrome_version}")
     remove_webdriver()
     download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
     response = requests.get(download_url, stream=True)
     response.raise_for_status()
     unpack_webdriver(response.content)
-    logger.debug(f"Chrome driver installed succesfully")
+    logger.info(f"Chrome driver installed succesfully")
 
 
 def run_command(command: str) -> tuple[str]:
