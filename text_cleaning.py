@@ -1,5 +1,4 @@
 def clean_chapter(chapter: dict) -> dict:
-    
     if "title" in chapter:
         chapter["title"] = clean_title(chapter["title"])
     
