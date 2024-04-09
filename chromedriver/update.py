@@ -14,32 +14,46 @@ CHROME_DRIVER_DOWNLOAD_URL = "https://storage.googleapis.com/chrome-for-testing-
 
 
 def check_for_updates() -> None:
-    output, error = run_command("google-chrome --version")
-    if error:
-        logger.error("Google chrome is not installed")
-        raise RuntimeError(error.decode("utf-8"))
-    
-    chrome_version = output.decode("utf-8").split(" ")[2]
+    chrome_version = get_google_chrome_version_or_raise()
+    chromedriver_version = get_chromedriver_version()
+
     logger.info(f"Found google chrome version {chrome_version}")
 
-    output, error = run_command(f"{CHROMEDRIVER_PATH} -v")
-    if error:
+    if chromedriver_version == chrome_version:
+        logger.info("Chrome driver is up to date")
+        return
+
+    if chromedriver_version is None:
         logger.warning(f"Chrome driver is not installed")
     else:
-        chromedriver_version = output.decode("utf-8").split(" ")[1]
-        if chromedriver_version == chrome_version:
-            logger.info("Chrome driver is up to date")
-            return
-        else:
-            logger.warning(f"Chrome driver version does not match google chrome")
+        logger.warning(f"Chrome driver version does not match google chrome")
     
     logger.warning(f"Installing chrome driver {chrome_version}")
+
     remove_webdriver()
     download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
     response = requests.get(download_url, stream=True)
     response.raise_for_status()
     unpack_webdriver(response.content)
+    
     logger.info(f"Chrome driver installed succesfully")
+
+
+def get_google_chrome_version_or_raise() -> str:
+    output, error = run_command("google-chrome --version")
+    if error:
+        logger.error("Google chrome is not installed")
+        raise RuntimeError(error.decode("utf-8"))
+    
+    return output.decode("utf-8").split(" ")[2]
+
+
+def get_chromedriver_version() -> str:
+    output, error = run_command(f"{CHROMEDRIVER_PATH} -v")
+    if error:
+        return None
+    
+    return output.decode("utf-8").split(" ")[1]
 
 
 def run_command(command: str) -> tuple[str]:
