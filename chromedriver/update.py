@@ -1,4 +1,4 @@
-import os
+import re
 import shutil
 import io
 import json
@@ -9,18 +9,33 @@ from pathlib import Path
 from loguru import logger
 
 
-CHROMEDRIVER_DIRECTORY = Path(__file__).parent / "chromedriver-linux64"
+GOOGLE_CHROME_LAST_KNOWN_GOOD_VERSION_URL = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json"
+GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_WITH_DOWNLOADS_URL = "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"
+CHROME_PKG_DIRECTORY = Path(__file__).parent
+GOOGLE_CHROME_DIRECTORY = CHROME_PKG_DIRECTORY / "chrome-linux64"
+GOOGLE_CHROME_PATH = GOOGLE_CHROME_DIRECTORY / "chrome"
+CHROMEDRIVER_DIRECTORY = CHROME_PKG_DIRECTORY / "chromedriver-linux64"
 CHROMEDRIVER_PATH = CHROMEDRIVER_DIRECTORY / "chromedriver"
-GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_URL = "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"
 
 
-def check_for_updates() -> None:
-    chrome_version = get_google_chrome_version_or_raise()
-    chromedriver_version = get_chromedriver_version()
+def check_for_updates(allow_google_chrome_updates: bool = False) -> None:
+    google_chrome_version = get_chrome_version(GOOGLE_CHROME_PATH)
+    latest_version = get_latest_google_chrome_version()
+    
+    if google_chrome_version is None:
+        logger.warning("Google chrome not installed")
+        install_google_chrome(latest_version)
+    elif allow_google_chrome_updates and google_chrome_version != latest_version:
+        logger.warning(f"Updating google chrome")
+        remove_google_chrome()
+        install_google_chrome(latest_version)
+    else:
+        logger.info(f"Found google chrome version {google_chrome_version}")
 
-    logger.info(f"Found google chrome version {chrome_version}")
+    google_chrome_version = get_chrome_version(GOOGLE_CHROME_PATH)
+    chromedriver_version = get_chrome_version(CHROMEDRIVER_PATH)
 
-    if chromedriver_version == chrome_version:
+    if chromedriver_version == google_chrome_version:
         logger.info("Chrome driver is up to date")
         return
 
@@ -28,50 +43,65 @@ def check_for_updates() -> None:
         logger.warning(f"Chrome driver is not installed")
     else:
         logger.warning(f"Chrome driver version does not match google chrome")
-    
-    logger.warning(f"Installing chrome driver {chrome_version}")
+        remove_chromedriver()
 
-    remove_chromedriver()
-
-    download_url = get_chromedriver_download_url(chrome_version)
-    response = requests.get(download_url, stream=True)
-    response.raise_for_status()
-    unpack_chromedriver(response.content)
-    
-    logger.info(f"Chrome driver installed succesfully")
+    install_chromedriver(google_chrome_version)
 
 
-def get_google_chrome_version_or_raise() -> str:
-    output, error = run_command("google-chrome --version")
-    if error:
-        logger.error("Google chrome is not installed")
-        raise RuntimeError(error.decode("utf-8"))
-    
-    return output.decode("utf-8").split(" ")[2]
-
-
-def get_chromedriver_version() -> str:
-    output, error = run_command(f"{CHROMEDRIVER_PATH} -v")
+def get_chrome_version(executable: str) -> str:
+    output, error = run_command(f"{executable} --version")
     if error:
         return None
     
-    return output.decode("utf-8").split(" ")[1]
+    matches = re.search("\\d*\\.\\d*\\.\\d*\\.\\d*", output.decode("utf-8"))
+    return matches.group(0)
 
 
-def get_chromedriver_download_url(chrome_version: str) -> str:
-    response = requests.get(GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_URL)
+def get_latest_google_chrome_version() -> None:
+    response = requests.get(GOOGLE_CHROME_LAST_KNOWN_GOOD_VERSION_URL)
+    response.raise_for_status()
+    latest = json.loads(response.text)
+    return latest["channels"]["Stable"]["version"]
+
+
+def install_google_chrome(version: str) -> None:
+        logger.warning(f"Installing google chrome version {version}")
+        download_url = get_chrome_dependency_download_url(version, "chrome")
+        install_chrome_dependency(download_url)
+        logger.info(f"Google chrome installed succesfully")
+
+
+def install_chromedriver(version: str) -> None:
+        logger.warning(f"Installing chrome driver version {version}")
+        download_url = get_chrome_dependency_download_url(version, "chromedriver")
+        install_chrome_dependency(download_url)
+        logger.info(f"Chrome driver installed succesfully")
+
+
+def get_chrome_dependency_download_url(version: str, dependency: str) -> str:
+    response = requests.get(GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_WITH_DOWNLOADS_URL)
     response.raise_for_status()
     good_versions = json.loads(response.text)["versions"]
 
-    version = next(iter(v for v in good_versions if v["version"] == chrome_version))
+    version = next(iter(v for v in good_versions if v["version"] == version))
     downloads = version["downloads"]
-    if "chromedriver" not in downloads:
-        msg = f"Unable to find a matching chromedriver version for google chrome {chrome_version}"
+    if dependency not in downloads:
+        dependecy_map = {
+            "chromedriver": "chromedriver",
+            "chrome": "google chrome",
+        }
+        msg = f"Unable to find {dependecy_map[dependency]} version {version}"
         raise RuntimeError(msg)
 
-    chromedriver_downloads = downloads["chromedriver"]
+    chromedriver_downloads = downloads[dependency]
     linux_download = next(iter(d for d in chromedriver_downloads if d["platform"] == "linux64"))
     return linux_download["url"]
+
+
+def install_chrome_dependency(download_url: str) -> None:
+    response = requests.get(download_url, stream=True)
+    response.raise_for_status()
+    unpack_chrome_dependency(response.content)
 
 
 def run_command(command: str) -> tuple[str]:
@@ -85,14 +115,16 @@ def remove_chromedriver() -> None:
         pass
 
 
-def unpack_chromedriver(chromedriver_content: bytes) -> None:
+def remove_google_chrome() -> None:
     try:
-        os.mkdir(CHROMEDRIVER_DIRECTORY)
-    except FileExistsError:
+        shutil.rmtree(GOOGLE_CHROME_DIRECTORY)
+    except:
         pass
-    
-    with zipfile.ZipFile(io.BytesIO(chromedriver_content)) as zip_file:
-        zip_file.extractall(CHROMEDRIVER_DIRECTORY.parent)
+
+
+def unpack_chrome_dependency(dependency_content: bytes) -> None:
+    with zipfile.ZipFile(io.BytesIO(dependency_content)) as zip_file:
+        zip_file.extractall(CHROME_PKG_DIRECTORY)
 
 
 check_for_updates()
