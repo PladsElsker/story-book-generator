@@ -1,1 +1,1 @@
-from .update import CHROMEDRIVER_PATH
+from .driver import create_chrome_driver

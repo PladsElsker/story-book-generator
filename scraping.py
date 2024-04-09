@@ -1,23 +1,12 @@
 from pathlib import Path
 from urllib.parse import urlparse
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 
-from chromedriver import CHROMEDRIVER_PATH
+from chromedriver import create_chrome_driver
 import text_cleaning
 
 
 SCRAPED_NOVELS_DIRECTORY = Path("scraped_novels")
-
-
-def create_chrome_driver():
-    service = Service(executable_path=CHROMEDRIVER_PATH)
-    options = Options()
-    # options.add_argument("--headless")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("--no-sandbox")
-    return webdriver.Chrome(service=service, options=options)
 
 
 def novel_scrape(driver: webdriver.Chrome, novel_page_url: str) -> None:
