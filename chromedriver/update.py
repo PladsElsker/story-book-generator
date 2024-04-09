@@ -63,8 +63,8 @@ def get_chromedriver_download_url(chrome_version: str) -> str:
     response.raise_for_status()
     good_versions = json.loads(response.text)["versions"]
 
-    version_object = next(iter(v for v in good_versions if v["version"] == chrome_version))
-    downloads = version_object["downloads"]
+    version = next(iter(v for v in good_versions if v["version"] == chrome_version))
+    downloads = version["downloads"]
     if "chromedriver" not in downloads:
         msg = f"Unable to find a matching chromedriver version for google chrome {chrome_version}"
         raise RuntimeError(msg)
