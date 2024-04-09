@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from selenium import webdriver
 
 from chromedriver import create_chrome_driver
-import text_cleaning
+from text_cleaning import clean_chapter
 
 
 SCRAPED_NOVELS_DIRECTORY = Path("scraped_novels")
@@ -74,7 +74,7 @@ class WebnovelScraper(NovelScraper):
             });
         """)
         scraped = {}
-        scraped["chapters"] = [text_cleaning.clean_chapter(chapter) for chapter in chapters]
+        scraped["chapters"] = [clean_chapter(chapter) for chapter in chapters]
         scraped["main_page_url"] = self.url
         scraped["last_scraped_url"] = self.driver.execute_script("return window.location.href;")
         return scraped
