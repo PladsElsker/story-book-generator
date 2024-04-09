@@ -30,11 +30,11 @@ def check_for_updates() -> None:
     
     logger.warning(f"Installing chrome driver {chrome_version}")
 
-    remove_webdriver()
+    remove_chromedriver()
     download_url = CHROME_DRIVER_DOWNLOAD_URL.format(version=chrome_version)
     response = requests.get(download_url, stream=True)
     response.raise_for_status()
-    unpack_webdriver(response.content)
+    unpack_chromedriver(response.content)
     
     logger.info(f"Chrome driver installed succesfully")
 
@@ -60,20 +60,20 @@ def run_command(command: str) -> tuple[str]:
     return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
 
 
-def remove_webdriver() -> None:
+def remove_chromedriver() -> None:
     try:
         shutil.rmtree(CHROMEDRIVER_DIRECTORY)
     except:
         pass
 
 
-def unpack_webdriver(webdriver_content: bytes) -> None:
+def unpack_chromedriver(chromedriver_content: bytes) -> None:
     try:
         os.mkdir(CHROMEDRIVER_DIRECTORY)
     except FileExistsError:
         pass
     
-    with zipfile.ZipFile(io.BytesIO(webdriver_content)) as zip_file:
+    with zipfile.ZipFile(io.BytesIO(chromedriver_content)) as zip_file:
         zip_file.extractall(CHROMEDRIVER_DIRECTORY.parent)
 
 
