@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from .update import CHROMEDRIVER_PATH
 
 
-def create_chrome_driver():
+def create_chrome_driver() -> webdriver.Chrome:
     service = Service(executable_path=CHROMEDRIVER_PATH)
     options = Options()
     # options.add_argument("--headless")
