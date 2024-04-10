@@ -162,3 +162,6 @@ cython_debug/
 # Chrome driver
 chrome-linux64/
 chromedriver-linux64/
+
+# Scraped novels
+scraped_novels/
