@@ -68,7 +68,6 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - Basic natural language analysis and embbeding database?
 - Split characters and background?
 - A repository of previously generated images and associated annotations. An annotation is a text associated to a generated image, could be the original light novel text or a reasoning about the image. Annotations are optimized to be searched when generating the next image.
-- 
 
 `Input` A scene in text.  
 `Output` `scene-<i>.png` located in the folder `assets/chapter-<j>/`.  
@@ -77,7 +76,6 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 
 - Consume the audio and video easily from a cellphone while traveling.  
 - Offline generation and save generated story on a mobile app.  
-- 
 
 `Input` A processed novel folder.  
 `Output` Mobile app playback.  
