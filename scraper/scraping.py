@@ -6,7 +6,7 @@ from chromedriver import create_chrome_driver
 from text_cleaning import clean_chapter
 
 
-SCRAPED_NOVELS_DIRECTORY = Path.cwd.parent / "scraped_novels"
+SCRAPED_NOVELS_DIRECTORY = Path.cwd.parent / "novels"
 
 
 def novel_scrape(driver: webdriver.Chrome, novel_page_url: str) -> None:
