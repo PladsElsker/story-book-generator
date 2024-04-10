@@ -129,4 +129,4 @@ def unpack_chrome_dependency(dependency_content: bytes) -> None:
         zip_file.extractall(CHROME_PKG_DIRECTORY)
 
 
-check_for_updates(version="124.0.6325.0")
+check_for_updates(version="123.0.6312.122")
