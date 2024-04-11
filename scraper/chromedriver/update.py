@@ -9,7 +9,7 @@ from pathlib import Path
 from loguru import logger
 
 
-ENFORCED_CHROME_VERSION = "123.0.6312.122" # None means latest
+ENFORCED_CHROME_VERSION = "123.0.6312.122"
 GOOGLE_CHROME_LAST_KNOWN_GOOD_VERSION_URL = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json"
 GOOGLE_CHROME_KNOWN_GOOD_VERSIONS_WITH_DOWNLOADS_URL = "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"
 CHROME_PKG_DIRECTORY = Path(__file__).parent
