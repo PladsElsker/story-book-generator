@@ -31,7 +31,6 @@ class WebnovelScraper(NovelScraper):
         
         chapters = self.driver.execute_script("""
             const all_chapters = [...document.querySelectorAll('.chapter_content')];
-            console.log("test-1-2");  
             return all_chapters.map(chapter => {
                 const title = chapter.querySelector(".cha-tit").textContent;
                 const content = chapter.querySelector(".cha-words").textContent;
