@@ -63,8 +63,14 @@ def get_merged_chapters(initial, new):
 @storage.command()
 def get_last_scraped_url() -> None:
     chapters_file = ROOT_DIRECTORY / storage.key / "chapters.json"
+    if not os.path.exists(chapters_file):
+        return
+
     with open(chapters_file, "r") as file:
         chapters = json.loads(file.read())
+    
+    if "last_scraped_url" not in chapters:
+        return
 
     print(chapters["last_scraped_url"])
 
