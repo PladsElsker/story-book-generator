@@ -15,15 +15,15 @@ def storage(novel_key: str) -> None:
 
 
 def make_novel_directory() -> None:
-    chapter_directory = ROOT_DIRECTORY / storage.key
-    if not os.path.exists(chapter_directory):
-        os.mkdir(chapter_directory)
+    novel_directory = ROOT_DIRECTORY / storage.key
+    if not os.path.exists(novel_directory):
+        os.mkdir(novel_directory)
     
-    assets = chapter_directory / "assets"
+    assets = novel_directory / "assets"
     if not os.path.exists(assets):
         os.mkdir(assets)
 
-    chapters = chapter_directory / "chapters.json"
+    chapters = novel_directory / "chapters.json"
     if not os.path.exists(chapters):
         with open(chapters, "w") as file:
             file.write("{}")
@@ -62,17 +62,18 @@ def get_merged_chapters(initial, new):
 
 @storage.command()
 def get_last_scraped_url() -> None:
-    chapters_file = ROOT_DIRECTORY / storage.key / "chapters.json"
-    if not os.path.exists(chapters_file):
-        return
-
-    with open(chapters_file, "r") as file:
-        chapters = json.loads(file.read())
+    chapters = ROOT_DIRECTORY / storage.key / "chapters.json"
     
-    if "last_scraped_url" not in chapters:
+    if not os.path.exists(chapters):
         return
 
-    print(chapters["last_scraped_url"])
+    with open(chapters, "r") as file:
+        chapters_json = json.loads(file.read())
+    
+    if "last_scraped_url" not in chapters_json:
+        return
+
+    print(chapters_json["last_scraped_url"])
 
 
 if __name__ == "__main__":
