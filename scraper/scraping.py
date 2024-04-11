@@ -16,7 +16,6 @@ def novel_scrape(driver: webdriver.Chrome, novel_title: str, novel_page_url: str
 
     scraper = NovelScraperFactory().create(driver, novel_title, novel_page_url)
     scraped_data = scraper.scrape()
-    
     merge_scraped(novel_key, scraped_data)
 
 
