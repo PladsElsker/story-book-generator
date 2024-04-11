@@ -160,10 +160,10 @@ cython_debug/
 #.idea/
 
 # Chrome driver
-scraper/chromedriver/*
-!scraper/chromedriver/__init__.py
-!scraper/chromedriver/driver.py
-!scraper/chromedriver/update.py
+*/chromedriver/*
+!*/chromedriver/__init__.py
+!*/chromedriver/driver.py
+!*/chromedriver/update.py
 
 # Novel data
 novels/*
