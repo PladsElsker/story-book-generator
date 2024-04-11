@@ -16,15 +16,15 @@ def storage(novel_key: str) -> None:
 
 def make_novel_directory() -> None:
     novel_directory = ROOT_DIRECTORY / storage.key
-    if not os.path.exists(novel_directory):
+    if not novel_directory.exists():
         os.mkdir(novel_directory)
     
     assets = novel_directory / "assets"
-    if not os.path.exists(assets):
+    if not assets.exists():
         os.mkdir(assets)
 
     chapters = novel_directory / "chapters.json"
-    if not os.path.exists(chapters):
+    if not chapters.exists():
         with open(chapters, "w") as file:
             file.write("{}")
 
@@ -63,8 +63,8 @@ def get_merged_chapters(initial, new):
 @storage.command()
 def get_last_scraped_url() -> None:
     chapters = ROOT_DIRECTORY / storage.key / "chapters.json"
-    
-    if not os.path.exists(chapters):
+
+    if not chapters.exists():
         return
 
     with open(chapters, "r") as file:
