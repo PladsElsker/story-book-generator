@@ -52,7 +52,7 @@ def check_for_updates(*, version: str = None) -> None:
 
 
 def get_version(executable: str) -> str:
-    output, error = run_command(f"{executable} --version")
+    output, error = subprocess.Popen(f"{executable} --version", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
     if error:
         return None
     
@@ -105,10 +105,6 @@ def install_chrome_dependency(download_url: str) -> None:
     response = requests.get(download_url, stream=True)
     response.raise_for_status()
     unpack_chrome_dependency(response.content)
-
-
-def run_command(command: str) -> tuple[str]:
-    return subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
 
 
 def remove_chromedriver() -> None:

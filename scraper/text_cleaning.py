@@ -19,3 +19,7 @@ def clean_paragraph(paragraph: str) -> str:
         nested_striped = nested_striped.replace("\n\n", "\n")
     
     return nested_striped
+
+
+def url_to_novel_key(url: str) -> str:
+    return url.replace("/", "_").replace(":", "_")

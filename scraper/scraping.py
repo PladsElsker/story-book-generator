@@ -6,10 +6,11 @@ from selenium import webdriver
 
 from chromedriver import create_chrome_driver
 from scrapers import NovelScraperFactory
+from text_cleaning import url_to_novel_key
 
 
 def novel_scrape(driver: webdriver.Chrome, novel_title: str, novel_page_url: str) -> None:
-    novel_key = novel_page_url.replace("/", "_").replace(":", "_")
+    novel_key = url_to_novel_key(novel_page_url)
     output, error = subprocess.Popen(f"./novels.sh {novel_key} get-last-scraped-url", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
     if error:
         raise RuntimeError(error.decode("utf-8"))
