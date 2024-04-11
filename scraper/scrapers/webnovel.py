@@ -1,6 +1,6 @@
 from selenium import webdriver
 
-from .novel_scraper import NovelScraper
+from .novel_scraper_strategy import NovelScraper
 from text_cleaning import clean_chapter
 
 
