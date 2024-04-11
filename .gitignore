@@ -160,8 +160,10 @@ cython_debug/
 #.idea/
 
 # Chrome driver
-chrome-linux64/
-chromedriver-linux64/
+scraper/chromedriver/*
+!scraper/chromedriver/__init__.py
+!scraper/chromedriver/driver.py
+!scraper/chromedriver/update.py
 
 # Novel data
 novels/*
