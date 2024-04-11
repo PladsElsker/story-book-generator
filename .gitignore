@@ -167,5 +167,5 @@ cython_debug/
 
 # Novel data
 novels/*
-!novels/handler.py
-!novels/requirements.txt
+!novels/pyproject.toml
+!novels/novel_storage/

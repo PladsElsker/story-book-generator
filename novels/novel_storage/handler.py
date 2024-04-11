@@ -1,21 +1,13 @@
 import os
-import click
 import json
 from pathlib import Path
 
 
-ROOT_DIRECTORY = Path.cwd() / "novels"
+ROOT_DIRECTORY = Path(__file__).parent.parent
 
 
-@click.group()
-@click.argument("novel-key", type=str)
-def storage(novel_key: str) -> None:
-    storage.key = novel_key
-    make_novel_directory()
-
-
-def make_novel_directory() -> None:
-    novel_directory = ROOT_DIRECTORY / storage.key
+def make_novel_directory(novel_key: str) -> None:
+    novel_directory = ROOT_DIRECTORY / novel_key
     if not novel_directory.exists():
         os.mkdir(novel_directory)
     
@@ -29,13 +21,8 @@ def make_novel_directory() -> None:
             file.write("{}")
 
 
-@storage.command()
-@click.argument("scraped_file", type=click.Path(exists=True))
-def merge_scraped(scraped_file: str) -> None:
-    with open(scraped_file, "rb") as file:
-        scraped = json.loads(file.read().decode("utf-8"))
-    
-    chapters_file = ROOT_DIRECTORY / storage.key / "chapters.json"
+def merge_scraped(novel_key: str, scraped: dict) -> None:
+    chapters_file = ROOT_DIRECTORY / novel_key / "chapters.json"
     with open(chapters_file, "r") as file:
         chapters = json.loads(file.read())
     
@@ -60,10 +47,8 @@ def get_merged_chapters(initial, new):
         raise KeyError(msg)
 
 
-@storage.command()
-def get_last_scraped_url() -> None:
-    chapters = ROOT_DIRECTORY / storage.key / "chapters.json"
-
+def get_last_scraped_url(novel_key: str) -> str:
+    chapters = ROOT_DIRECTORY / novel_key / "chapters.json"
     if not chapters.exists():
         return
 
@@ -73,8 +58,4 @@ def get_last_scraped_url() -> None:
     if "last_scraped_url" not in chapters_json:
         return
 
-    print(chapters_json["last_scraped_url"])
-
-
-if __name__ == "__main__":
-    storage()
+    return chapters_json["last_scraped_url"]

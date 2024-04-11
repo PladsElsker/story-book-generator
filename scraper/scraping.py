@@ -1,8 +1,6 @@
 import click
-import json
-import tempfile
-import subprocess
 from selenium import webdriver
+from novel_storage import make_novel_directory, get_last_scraped_url, merge_scraped
 
 from chromedriver import create_chrome_driver
 from scrapers import NovelScraperFactory
@@ -11,20 +9,15 @@ from text_cleaning import url_to_novel_key
 
 def novel_scrape(driver: webdriver.Chrome, novel_title: str, novel_page_url: str) -> None:
     novel_key = url_to_novel_key(novel_page_url)
-    output, error = subprocess.Popen(f"./novels.sh {novel_key} get-last-scraped-url", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
-    if error:
-        raise RuntimeError(error.decode("utf-8"))
-    elif output:
-        novel_page_url = output.decode("utf-8")
+    make_novel_directory(novel_key)
+    last_scraped_url = get_last_scraped_url(novel_key)
+    if last_scraped_url:
+        novel_page_url = last_scraped_url
 
     scraper = NovelScraperFactory().create(driver, novel_title, novel_page_url)
     scraped_data = scraper.scrape()
     
-    with tempfile.NamedTemporaryFile(mode="wb") as temp_file:
-        temp_file.write(json.dumps(scraped_data).encode("utf-8"))
-        output, error = subprocess.Popen(f"./novels.sh {novel_key} merge-scraped {temp_file.name}", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
-        if error:
-            raise RuntimeError(error.decode("utf-8"))
+    merge_scraped(novel_key, scraped_data)
 
 
 @click.command()
