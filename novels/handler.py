@@ -53,7 +53,7 @@ def merge_scraped(scraped_file: str) -> None:
 def get_merged_chapters(initial, new):
     last_title = new[0]["title"]
     try:
-        last_index = next(iter(i for i, chapter in enumerate(initial) if chapter["title"] == last_title))
+        last_index = next(iter(i for i, chapter in reversed(list(enumerate(initial))) if chapter["title"] == last_title))
         return initial[:last_index] + new
     except StopIteration:
         msg = "Unable to merge because the new chapters don't overlap with the existing ones"
