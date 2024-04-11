@@ -1,4 +1,6 @@
-from pathlib import Path
+import json
+import tempfile
+import subprocess
 from urllib.parse import urlparse
 from selenium import webdriver
 
@@ -6,35 +8,32 @@ from chromedriver import create_chrome_driver
 from text_cleaning import clean_chapter
 
 
-SCRAPED_NOVELS_DIRECTORY = Path.cwd.parent / "novels"
+def novel_scrape(driver: webdriver.Chrome, novel_title: str, novel_page_url: str) -> None:
+    novel_key = novel_page_url.replace("/", "_").replace(":", "_")
+    output, error = subprocess.Popen(f"./novels.sh {novel_key} get-last-scraped-url", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+    if not error:
+        novel_page_url = output.decode("utf-8")
 
-
-def novel_scrape(driver: webdriver.Chrome, novel_page_url: str) -> None:
-    # resume_scraping_page = novel_page_url
-    # if novel_page_url in storage:
-        # resume_scraping_page = storage[novel_page_url]["last_scraped_url"]
-
-    scraper = NovelScraperFactory().create(driver, novel_page_url)
+    scraper = NovelScraperFactory().create(driver, novel_title, novel_page_url)
     scraped_data = scraper.scrape()
     
-    # if novel_page_url in storage:
-    #     previous_scraped_data = storage[novel_page_url]
-    #     first_scraped_title = scraped_data["chapters"][0]["title"]
-    #     seem_index = next(iter(i for i, chapter in enumerate([previous_scraped_data["chapters"]]) if chapter["title"] == first_scraped_title))
-    #     scraped_data["chapters"][0:0] = previous_scraped_data["chapters"][:seem_index+1]
-    
-    # storage[novel_page_url] = scraped_data
+    with tempfile.NamedTemporaryFile(mode="wb") as temp_file:
+        temp_file.write(json.dumps(scraped_data).encode("utf-8"))
+        output, error = subprocess.Popen(f"./novels.sh {novel_key} merge-scraped {temp_file.name}", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+        if error:
+            raise RuntimeError(error.decode("utf-8"))
 
 
 class NovelScraperFactory:
-    def create(self, driver: webdriver.Chrome, novel_page_url: str) -> str:
+    def create(self, driver: webdriver.Chrome, novel_title: str, novel_page_url: str) -> str:
         parsed_url = urlparse(novel_page_url)
         website = parsed_url.netloc.split(":")[0]
-        return SCRAPER_MAP[website](driver, novel_page_url)
+        return SCRAPER_MAP[website](driver, novel_title, novel_page_url)
 
 
 class NovelScraper:
-    def __init__(self, driver: webdriver.Chrome, url: str) -> None:
+    def __init__(self, driver: webdriver.Chrome, title: str, url: str) -> None:
+        self.title = title
         self.url = url
         self.driver = driver
         self.driver.get(url)
@@ -44,8 +43,8 @@ class NovelScraper:
 
 
 class WebnovelScraper(NovelScraper):
-    def __init__(self, driver: webdriver.Chrome, url: str) -> None:
-        super().__init__(driver, url)
+    def __init__(self, driver: webdriver.Chrome, title: str, url: str) -> None:
+        super().__init__(driver, title, url)
 
     def scrape(self) -> list[str]:
         end_reached = False
@@ -78,9 +77,10 @@ class WebnovelScraper(NovelScraper):
             });
         """)
         scraped = {}
-        scraped["chapters"] = [clean_chapter(chapter) for chapter in chapters]
-        scraped["main_page_url"] = self.url
+        scraped["title"] = self.title
+        scraped["first_chapter_url"] = self.url
         scraped["last_scraped_url"] = self.driver.execute_script("return window.location.href;")
+        scraped["chapters"] = [clean_chapter(chapter) for chapter in chapters]
         return scraped
 
 
@@ -91,7 +91,6 @@ SCRAPER_MAP = {
 
 if __name__ == "__main__":
     driver = create_chrome_driver()
-    novel_scrape(driver, "https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705/volume-1-prologue_72736022055680334")
-    # novel_scrape(driver, "https://www.webnovel.com/book/reincarnated-with-the-mind-control-powers-in-another-world._25331737205609705/chapter-1_67999384498920800")
-
+    # novel_scrape(driver, "Mushoku Tensei", "https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705/volume-1-prologue_72736022055680334")
+    novel_scrape(driver, "Reincarnated With The Mind Control Powers In Another World", "https://www.webnovel.com/book/reincarnated-with-the-mind-control-powers-in-another-world._25331737205609705/chapter-1_67999384498920800")
     driver.quit()

@@ -164,4 +164,6 @@ chrome-linux64/
 chromedriver-linux64/
 
 # Novel data
-novels/
+novels/*
+!novels/handler.py
+!novels/requirements.txt
