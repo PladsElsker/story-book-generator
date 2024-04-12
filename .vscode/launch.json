@@ -21,6 +21,24 @@
             "console": "integratedTerminal",
             "python": "${workspaceFolder}/scraper/venv/bin/python",
             "args": ["-t", "Mushoku Tensei", "-u", "https://www.webnovel.com/book/mushoku-tensei-full-version_27096259406624705/volume-1-prologue_72736022055680334"]
+        },
+        {
+            "name": "Scenify \"Reincarnated With The Mind Control Powers In Another World\"",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "scenes/splitting.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/scenes/venv/bin/python",
+            "args": ["-k", "https___www.webnovel.com_book_reincarnated-with-the-mind-control-powers-in-another-world._25331737205609705_chapter-1_67999384498920800"]
+        },
+        {
+            "name": "Scenify \"Mushoku Tensei\"",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "scenes/splitting.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/scenes/venv/bin/python",
+            "args": ["-k", "https___www.webnovel.com_book_mushoku-tensei-full-version_27096259406624705_volume-1-prologue_72736022055680334"]
         }
     ]
 }

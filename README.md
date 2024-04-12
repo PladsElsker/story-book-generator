@@ -10,7 +10,7 @@ Generate a story book narated and depicted by AI from written novels
 - Should easily be able to scrape different web sites, and click on the "next chapter" link automatically
 
 `Input` A web url of a light novel.  
-`Output` A uniquely named folder containing a chapters.json file of this format:  
+`Output` A uniquely named folder containing a novel.json file of this format:  
 ```json
 {
   "title": "Mushoko tenser",
