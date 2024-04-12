@@ -29,6 +29,8 @@ class WebnovelScraper(NovelScraper):
                 timeout_handle = setTimeout(() => callback('done'), 4000);
             """)
         
+        self.driver.execute_script("document.querySelectorAll('.para-comment').forEach(comment => comment.parentElement.removeChild(comment));");
+        self.driver.execute_script("document.querySelectorAll('.para-comment_num').forEach(comment => comment.parentElement.removeChild(comment));");
         chapters = self.driver.execute_script("""
             const all_chapters = [...document.querySelectorAll('.chapter_content')];
             return all_chapters.map(chapter => {
