@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import TextIO
 import json
 
@@ -20,12 +19,7 @@ class DictClass:
         return iter(self.__dict__)
 
 
-@dataclass
 class Chapter(DictClass):
-    title: str
-    content: str
-    scenes: list[str]
-
     def __init__(self, chapter_rep: dict[str, any]) -> None:
         self.title = chapter_rep["title"]
         self.content = chapter_rep["content"]
