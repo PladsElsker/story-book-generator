@@ -1,7 +1,7 @@
 from selenium import webdriver
 
 from .strategy import NovelScraperStrategy
-from text_cleaning import clean_chapter
+from scraper.text_cleaning import clean_chapter
 from scraper.novel import Chapter, Novel
 
 
