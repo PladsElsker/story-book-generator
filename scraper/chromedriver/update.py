@@ -110,14 +110,14 @@ def install_chrome_dependency(download_url: str) -> None:
 def remove_chromedriver() -> None:
     try:
         shutil.rmtree(CHROMEDRIVER_DIRECTORY)
-    except:
+    except:  # Just making sure the directory is deleted, we don't care if it was already not there
         pass
 
 
 def remove_google_chrome() -> None:
     try:
         shutil.rmtree(GOOGLE_CHROME_DIRECTORY)
-    except:
+    except:  # Same as "remove_chromedriver()"
         pass
 
 

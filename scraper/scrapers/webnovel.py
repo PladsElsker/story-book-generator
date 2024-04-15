@@ -1,16 +1,16 @@
 from selenium import webdriver
 
-from .novel_scraper_strategy import NovelScraper
+from .strategy import NovelScraperStrategy
 from text_cleaning import clean_chapter
+from scraper.novel import Chapter, Novel
 
 
-class WebnovelScraper(NovelScraper):
+class WebnovelScraper(NovelScraperStrategy):
     def __init__(self, driver: webdriver.Chrome, title: str, url: str) -> None:
         super().__init__(driver, title, url)
 
     def scrape(self) -> list[str]:
         end_reached = False
-
         while not end_reached:
             end_reached = self.driver.execute_async_script("""
                 const callback = arguments[arguments.length - 1];
@@ -31,17 +31,18 @@ class WebnovelScraper(NovelScraper):
         
         self.driver.execute_script("document.querySelectorAll('.para-comment').forEach(comment => comment.parentElement.removeChild(comment));");
         self.driver.execute_script("document.querySelectorAll('.para-comment_num').forEach(comment => comment.parentElement.removeChild(comment));");
-        chapters = self.driver.execute_script("""
+        chapters_rep = self.driver.execute_script("""
             const all_chapters = [...document.querySelectorAll('.chapter_content')];
             return all_chapters.map(chapter => {
                 const title = chapter.querySelector(".cha-tit").textContent;
                 const content = chapter.querySelector(".cha-words").textContent;
-                return {title, content};
+                return {title, content, scenes: []};
             });
         """)
-        scraped = {}
-        scraped["title"] = self.title
-        scraped["first_chapter_url"] = self.url
-        scraped["last_scraped_url"] = self.driver.execute_script("return window.location.href;")
-        scraped["chapters"] = [clean_chapter(chapter) for chapter in chapters]
-        return scraped
+        chapters = [Chapter(chapter_rep) for chapter_rep in chapters_rep]
+        return Novel(
+            self.title,
+            self.url,
+            self.driver.execute_script("return window.location.href;"),
+            [clean_chapter(chapter) for chapter in chapters],
+        )

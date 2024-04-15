@@ -1,12 +1,16 @@
 from selenium import webdriver
+from abc import ABC, abstractmethod
+
+from scraper import Novel
 
 
-class NovelScraper:
+class NovelScraperStrategy(ABC):
     def __init__(self, driver: webdriver.Chrome, title: str, url: str) -> None:
         self.title = title
         self.url = url
         self.driver = driver
         self.driver.get(url)
 
-    def scrape(self) -> list[str]:
+    @abstractmethod
+    def scrape(self) -> Novel:
         raise NotImplementedError()
