@@ -1,7 +1,7 @@
 from selenium import webdriver
 from abc import ABC, abstractmethod
 
-from scraper import Novel
+from scraper.novel import Novel
 
 
 class NovelScraperStrategy(ABC):
