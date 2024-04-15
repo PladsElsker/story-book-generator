@@ -166,6 +166,4 @@ cython_debug/
 !*/chromedriver/update.py
 
 # Novel data
-novels/*
-!novels/pyproject.toml
-!novels/novel_storage/
+novels/
