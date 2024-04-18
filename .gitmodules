@@ -1,0 +1,3 @@
+[submodule "audio/metavoice-src"]
+	path = audio/metavoice-src
+	url = https://github.com/metavoiceio/metavoice-src.git

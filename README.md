@@ -50,7 +50,7 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 ```
 
 ### Light novel to audio
-- https://huggingface.co/metavoiceio/metavoice-1B-v0.1
+- https://github.com/metavoiceio/metavoice-src
 - https://huggingface.co/Pendrokar/xvapitch_nvidia
 - https://huggingface.co/spaces/coqui/xtts
 - https://huggingface.co/ShoukanLabs/Vokan

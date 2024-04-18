@@ -1,5 +1,7 @@
 import sys
-sys.path[0:0] = ["."]
+if "." not in sys.path:
+    sys.path[0:0] = ["."]
+
 from selenium import webdriver
 
 from chromedriver import create_chrome_driver
