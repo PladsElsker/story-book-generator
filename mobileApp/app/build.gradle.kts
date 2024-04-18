@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.lebel.bingenovel"
+    namespace = "com.lebel.novelbinge"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lebel.bingenovel"
+        applicationId = "com.lebel.novelbinge"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -20,7 +20,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {

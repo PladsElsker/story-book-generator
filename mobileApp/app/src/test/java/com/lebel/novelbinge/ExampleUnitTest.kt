@@ -1,4 +1,4 @@
-package com.lebel.bingenovel
+package com.lebel.novelbinge
 
 import org.junit.Test
 

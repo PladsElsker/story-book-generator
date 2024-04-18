@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Binge Novel"
+rootProject.name = "Novel binge"
 include(":app")
