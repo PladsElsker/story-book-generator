@@ -11,3 +11,4 @@ fi
 
 
 install_requirements scraper
+install_requirements scenes
