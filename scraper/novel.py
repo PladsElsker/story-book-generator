@@ -1,4 +1,4 @@
-from typing import TextIO, Optional
+from typing import TextIO
 import json
 
 
