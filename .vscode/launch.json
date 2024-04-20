@@ -11,7 +11,16 @@
             "program": "scraper/scraping.py",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-            "python": "${workspaceFolder}/venv/bin/python",
+            "python": "${workspaceFolder}/venv/bin/python"
+        },
+        {
+            "name": "Scenify",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "scenes/splitting.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/venv/bin/python"
         }
     ]
 }
