@@ -89,8 +89,8 @@ def get_chrome_dependency_download_url(version: str, dependency: str) -> str:
     version = next(iter(v for v in good_versions if v["version"] == version))
     downloads = version["downloads"]
     if dependency not in downloads:
-        dependecy_map = { "chrome": "google chrome" }
-        dependency_name = dependecy_map[dependency] if dependency in dependecy_map else dependency
+        dependency_map = { "chrome": "google chrome" }
+        dependency_name = dependency_map[dependency] if dependency in dependency_map else dependency
         msg = f"Unable to find {dependency_name} version {version}"
         raise RuntimeError(msg)
 
