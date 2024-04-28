@@ -19,13 +19,18 @@ def ensure_novel_directory_created(novel_key: str, title: str, first_chapter_url
     novel_file = novel_directory / "novel.json"
     if not novel_file.exists():
         novel = Novel(title, first_chapter_url, first_chapter_url, [])
-        with open(novel_file, "w") as file:
-            novel.serialize(file)
+        set_novel(novel_key, novel)
 
 def get_novel(novel_key: str) -> Novel:
     novel_file = ROOT_DIRECTORY / novel_key / "novel.json"
     with open(novel_file) as file:
         return Novel.deserialize(file)
+
+
+def set_novel(novel_key: str, novel: Novel) -> None:
+    novel_file = ROOT_DIRECTORY / novel_key / "novel.json"
+    with open(novel_file, "w") as file:
+        return novel.serialize(file)
 
 
 def merge_scraped(novel_key: str, scraped: Novel) -> None:
@@ -40,8 +45,7 @@ def merge_scraped(novel_key: str, scraped: Novel) -> None:
     else:
         novel = scraped
 
-    with open(novel_file, "w") as file:
-        novel.serialize(file)
+    set_novel(novel_key, novel)
 
 
 def get_merged_chapters(initial: list[Chapter], new: list[Chapter]) -> list[Chapter]:
