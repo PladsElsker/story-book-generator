@@ -33,10 +33,10 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val dataset = arrayOf("January", "February", "March")
-        // val customAdapter = NovelCardRecyclerViewAdapter(dataset)
+        val customAdapter = NovelCardRecyclerViewAdapter(dataset)
 
         val recyclerView: RecyclerView? = getView()?.findViewById(R.id.novels)
-        // recyclerView?.adapter = customAdapter
+        recyclerView?.adapter = customAdapter
     }
 
     override fun onDestroyView() {
