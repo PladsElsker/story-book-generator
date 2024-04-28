@@ -3,4 +3,5 @@ from .handler import (
     get_novel,
     set_novel,
     merge_scraped,
+    save_scene_speech,
 )

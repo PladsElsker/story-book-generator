@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from io import BytesIO
 
 from scraper.novel import Chapter, Novel
 
@@ -39,7 +40,7 @@ def merge_scraped(novel_key: str, scraped: Novel) -> None:
         novel = Novel.deserialize(file)
     
     if all((key in novel) for key in ["title", "first_chapter_url", "last_scraped_url", "chapters"]):
-        novel["chapters"] = get_merged_chapters(novel["chapters"], scraped["chapters"])
+        novel["chapters"] = _get_merged_chapters(novel["chapters"], scraped["chapters"])
         novel["title"] = scraped["title"]
         novel["last_scraped_url"] = scraped["last_scraped_url"]
     else:
@@ -48,7 +49,7 @@ def merge_scraped(novel_key: str, scraped: Novel) -> None:
     set_novel(novel_key, novel)
 
 
-def get_merged_chapters(initial: list[Chapter], new: list[Chapter]) -> list[Chapter]:
+def _get_merged_chapters(initial: list[Chapter], new: list[Chapter]) -> list[Chapter]:
     if len(initial) == 0:
         return new
 
@@ -59,3 +60,13 @@ def get_merged_chapters(initial: list[Chapter], new: list[Chapter]) -> list[Chap
     except StopIteration:
         msg = "Unable to merge because the new chapters don't overlap with the existing ones"
         raise KeyError(msg)
+
+
+def save_scene_speech(novel_key: str, generated_audio: BytesIO, chapter_index, scene_index) -> None:
+    assets_chapter_path = ROOT_DIRECTORY / novel_key / "assets" / f"chapter-{chapter_index}"
+    if not assets_chapter_path.exists():
+        os.mkdir(assets_chapter_path)
+    
+    output_file = assets_chapter_path / f"scene-{scene_index}.wav"
+    with open(output_file, "wb") as f:
+        f.write(generated_audio.read())
