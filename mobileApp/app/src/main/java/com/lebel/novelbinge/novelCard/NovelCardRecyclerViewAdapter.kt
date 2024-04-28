@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lebel.novelbinge.R
 
-class NovelCardRecyclerViewAdapter(private val dataSet: Array<String>) :
+class NovelCardRecyclerViewAdapter(private val dataSet: List<String>) :
     RecyclerView.Adapter<NovelCardRecyclerViewAdapter.ViewHolder>() {
 
     /**

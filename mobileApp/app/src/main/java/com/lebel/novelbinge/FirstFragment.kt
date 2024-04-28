@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.lebel.novelbinge.databinding.FragmentFirstBinding
+import java.io.File
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -32,8 +35,15 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dataset = arrayOf("January", "February", "March")
-        val customAdapter = NovelCardRecyclerViewAdapter(dataset)
+        val novelsFolder = File(requireContext().getExternalFilesDir(null), "novels")
+        novelsFolder.mkdirs()
+        val novelFolders = novelsFolder.listFiles()?.filter { it.isDirectory } ?: emptyList()
+        val chapterFiles = novelFolders.map { File(it, "novel.json") }
+        val chapterJsonObjects = chapterFiles.map { Json.parseToJsonElement(it.readText()) }
+        val chapterTitles =
+            chapterJsonObjects.mapNotNull { it.jsonObject["title"]?.jsonPrimitive?.content }
+
+        val customAdapter = NovelCardRecyclerViewAdapter(chapterTitles)
 
         val recyclerView: RecyclerView? = getView()?.findViewById(R.id.novels)
         recyclerView?.adapter = customAdapter
