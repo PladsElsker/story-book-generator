@@ -7,14 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lebel.novelbinge.databinding.NovelListBinding
+import com.lebel.novelbinge.databinding.FragmentNovelListBinding
+import com.lebel.novelbinge.domain.NovelData
+import com.lebel.novelbinge.domain.NovelFileReader
 import java.io.File
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-class NovelList : Fragment() {
 
-    private var _binding: NovelListBinding? = null
+class NovelList : Fragment() {
+    private var _binding: FragmentNovelListBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,7 +26,7 @@ class NovelList : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = NovelListBinding.inflate(inflater, container, false)
+        _binding = FragmentNovelListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -34,13 +36,7 @@ class NovelList : Fragment() {
     }
 
     private fun createNovelList() {
-        val novelsFolder = File(requireContext().getExternalFilesDir(null), "novels")
-        novelsFolder.mkdirs()
-        val novelFolders = novelsFolder.listFiles()?.filter { it.isDirectory } ?: emptyList()
-        val chapterFiles = novelFolders.map { File(it, "novel.json") }
-        val chapterJsonObjects = chapterFiles.map { Json.parseToJsonElement(it.readText()) }
-        val chapterTitles = chapterJsonObjects.mapNotNull { it.jsonObject["title"]?.jsonPrimitive?.content }
-        val customAdapter = NovelCardRecyclerViewAdapter(chapterTitles)
+        val customAdapter = NovelCardRecyclerViewAdapter(NovelFileReader.ReadAllTitles(requireContext()))
         val recyclerView: RecyclerView? = view?.findViewById(R.id.novels)
         recyclerView?.adapter = customAdapter
     }

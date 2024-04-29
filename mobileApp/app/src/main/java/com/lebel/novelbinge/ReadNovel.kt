@@ -5,11 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.lebel.novelbinge.databinding.FragmentReadnovelBinding
+import com.lebel.novelbinge.domain.NovelFileReader
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 class ReadNovel : Fragment() {
 
     private var _binding: FragmentReadnovelBinding? = null
@@ -22,10 +21,20 @@ class ReadNovel : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentReadnovelBinding.inflate(inflater, container, false)
         return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val textView: TextView = this.view?.findViewById(R.id.textview) ?: return
+        val folderName = arguments?.getString("folderName")
+
+        if (folderName == null) {
+            textView.text = "Argument 'folderName' not found"
+            return
+        }
+
+        textView.text = NovelFileReader.ReadChapterData(requireContext(), folderName).chapters
     }
 
     override fun onDestroyView() {

@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/NovelList"
         android:name="com.lebel.novelbinge.NovelList"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/novel_list">
+        android:label="@string/novel_list_label"
+        tools:layout="@layout/fragment_novel_list">
 
         <action
             android:id="@+id/action_NovelList_to_ReadNovel"
@@ -18,11 +18,14 @@
     <fragment
         android:id="@+id/ReadNovel"
         android:name="com.lebel.novelbinge.ReadNovel"
-        android:label="@string/second_fragment_label"
+        android:label="@string/read_novel_fragment_label"
         tools:layout="@layout/fragment_readnovel">
 
         <action
             android:id="@+id/action_ReadNovel_to_NovelList"
             app:destination="@id/NovelList" />
+        <argument
+            android:name="novelFolderName"
+            app:argType="string" />
     </fragment>
 </navigation>
