@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/NovelList">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.lebel.novelbinge.FirstFragment"
+        android:id="@+id/NovelList"
+        android:name="com.lebel.novelbinge.NovelList"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/novel_list">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_NovelList_to_ReadNovel"
+            app:destination="@id/ReadNovel" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.lebel.novelbinge.SecondFragment"
+        android:id="@+id/ReadNovel"
+        android:name="com.lebel.novelbinge.ReadNovel"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_readnovel">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_ReadNovel_to_NovelList"
+            app:destination="@id/NovelList" />
     </fragment>
 </navigation>
