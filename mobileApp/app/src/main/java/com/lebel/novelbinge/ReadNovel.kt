@@ -1,11 +1,11 @@
 package com.lebel.novelbinge
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.lebel.novelbinge.databinding.FragmentReadnovelBinding
 import com.lebel.novelbinge.domain.NovelFileReader
 
@@ -34,7 +34,8 @@ class ReadNovel : Fragment() {
             return
         }
 
-        textView.text = NovelFileReader.ReadChapterData(requireContext(), folderName).chapters
+        textView.text = NovelFileReader.readChapterData(requireContext(), folderName)?.chapters
+            ?: "Novel not found"
     }
 
     override fun onDestroyView() {

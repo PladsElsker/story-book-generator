@@ -1,19 +1,14 @@
 package com.lebel.novelbinge
 
-import NovelCardRecyclerViewAdapter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.lebel.novelbinge.databinding.FragmentNovelListBinding
-import com.lebel.novelbinge.domain.NovelData
 import com.lebel.novelbinge.domain.NovelFileReader
-import java.io.File
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import com.lebel.novelbinge.novelCard.NovelCardRecyclerViewAdapter
 
 class NovelList : Fragment() {
     private var _binding: FragmentNovelListBinding? = null
@@ -36,7 +31,8 @@ class NovelList : Fragment() {
     }
 
     private fun createNovelList() {
-        val customAdapter = NovelCardRecyclerViewAdapter(NovelFileReader.ReadAllTitles(requireContext()))
+        val customAdapter =
+            NovelCardRecyclerViewAdapter(NovelFileReader.readAllTitles(requireContext()))
         val recyclerView: RecyclerView? = view?.findViewById(R.id.novels)
         recyclerView?.adapter = customAdapter
     }

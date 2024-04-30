@@ -9,12 +9,9 @@ import java.io.File
 
 class NovelFileReader {
     companion object {
-        fun ReadAllTitles(context: Context): List<NovelData> {
+        fun readAllTitles(context: Context): List<NovelData> {
             val novelsFolder = File(context.getExternalFilesDir(null), "novels")
-
-            // Make sure the folder exists
-            novelsFolder.mkdirs()
-
+            ensureFolderCreated(novelsFolder)
             val novelFolders = novelsFolder.listFiles()?.filter { it.isDirectory } ?: emptyList()
 
             return novelFolders.map { novelFolder: File ->
@@ -24,8 +21,11 @@ class NovelFileReader {
             }
         }
 
-        fun ReadChapterData(context: Context, folderName: String): NovelChapterData {
+        fun readChapterData(context: Context, folderName: String): NovelChapterData? {
             val novelFile = File(context.getExternalFilesDir(null), "novels/$folderName/novel.json")
+
+            if (!novelFile.exists()) return null
+
             val jsonObject = Json.parseToJsonElement(novelFile.readText())
             val title = jsonObject.jsonObject["title"]?.jsonPrimitive?.content ?: "No title"
             val chapters = jsonObject.jsonObject["chapters"]?.jsonArray?.joinToString {
@@ -33,6 +33,10 @@ class NovelFileReader {
             } ?: "No Chapters"
 
             return NovelChapterData(folderName, title, chapters)
+        }
+
+        private fun ensureFolderCreated(novelsFolder: File) {
+            novelsFolder.mkdirs()
         }
     }
 }

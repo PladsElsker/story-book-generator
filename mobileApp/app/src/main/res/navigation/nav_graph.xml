@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/NovelList"
         android:name="com.lebel.novelbinge.NovelList"
-        android:label="@string/novel_list_label"
+        android:label="Novels"
         tools:layout="@layout/fragment_novel_list">
 
         <action
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/ReadNovel"
         android:name="com.lebel.novelbinge.ReadNovel"
-        android:label="@string/read_novel_fragment_label"
+        android:label="Read novel"
         tools:layout="@layout/fragment_readnovel">
 
         <action
