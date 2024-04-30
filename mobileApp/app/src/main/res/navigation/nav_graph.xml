@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/NovelList">
+
+    <fragment
+        android:id="@+id/NovelList"
+        android:name="com.lebel.novelbinge.NovelList"
+        android:label="Novels"
+        tools:layout="@layout/fragment_novel_list">
+
+        <action
+            android:id="@+id/action_NovelList_to_ReadNovel"
+            app:destination="@id/ReadNovel" />
+    </fragment>
+    <fragment
+        android:id="@+id/ReadNovel"
+        android:name="com.lebel.novelbinge.ReadNovel"
+        android:label="Read novel"
+        tools:layout="@layout/fragment_readnovel">
+
+        <action
+            android:id="@+id/action_ReadNovel_to_NovelList"
+            app:destination="@id/NovelList" />
+        <argument
+            android:name="novelFolderName"
+            app:argType="string" />
+    </fragment>
+</navigation>
