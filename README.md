@@ -53,6 +53,7 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - https://huggingface.co/metavoiceio/metavoice-1B-v0.1
 - https://huggingface.co/Pendrokar/xvapitch_nvidia
 - https://huggingface.co/spaces/coqui/xtts
+- https://github.com/yl4579/StyleTTS2
 - https://huggingface.co/ShoukanLabs/Vokan
 - [rvc](https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI)?
 - Maybe something else?
