@@ -67,6 +67,7 @@ To make sure both the audio and the image are in sync, the chapters must be spli
 - LLM to fetch previous images from database for consistency?
 - Basic natural language analysis and embbeding database?
 - Split characters and background?
+- Use Trellis to generate 3D models of the characters for consistent image generation. 
 - A repository of previously generated images and associated annotations. An annotation is a text associated to a generated image, could be the original light novel text or a reasoning about the image. Annotations are optimized to be searched when generating the next image.
 
 `Input` A scene in text.  
