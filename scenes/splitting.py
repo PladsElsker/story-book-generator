@@ -1,5 +1,7 @@
 import sys
-sys.path[0:0] = ["."]
+if "." not in sys.path:
+    sys.path[0:0] = ["."]
+
 from storage_handler import get_novel, set_novel
 
 

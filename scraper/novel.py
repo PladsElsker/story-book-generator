@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import TextIO
 import json
 
@@ -39,7 +40,7 @@ class Novel(DictClass):
         json.dump(novel_rep, file, indent=4)
 
     @classmethod
-    def deserialize(cls, file: TextIO) -> None:
+    def deserialize(cls, file: TextIO) -> Novel:
         novel_rep = json.load(file)
         novel_rep["chapters"] = [Chapter(chapter_rep) for chapter_rep in novel_rep["chapters"]]
         novel = Novel(None, None, None, None)

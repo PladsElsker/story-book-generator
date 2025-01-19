@@ -21,6 +21,16 @@
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "python": "${workspaceFolder}/venv/bin/python"
+        },
+        {
+            "name": "tts",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "audio/generate_tts.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "python": "${workspaceFolder}/venv/bin/python"
         }
     ]
 }

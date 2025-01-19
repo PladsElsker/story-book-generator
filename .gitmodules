@@ -1,0 +1,3 @@
+[submodule "audio/metavoice-no-telemetry"]
+	path = audio/metavoice-no-telemetry
+	url = https://github.com/John-WL/metavoice-no-telemetry.git
